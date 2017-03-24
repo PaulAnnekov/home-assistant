@@ -17,6 +17,7 @@ from homeassistant.const import (
     ATTR_SERVICE_DATA, EVENT_CALL_SERVICE, EVENT_SERVICE_EXECUTED,
     EVENT_STATE_CHANGED, EVENT_TIME_CHANGED, MATCH_ALL)
 from homeassistant.core import EventOrigin, State
+import homeassistant.helpers.config_validation as cv
 from homeassistant.remote import JSONEncoder
 
 DOMAIN = "mqtt_eventstream"
@@ -24,11 +25,13 @@ DEPENDENCIES = ['mqtt']
 
 CONF_PUBLISH_TOPIC = 'publish_topic'
 CONF_SUBSCRIBE_TOPIC = 'subscribe_topic'
+CONF_RETAIN = 'retain'
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
         vol.Optional(CONF_PUBLISH_TOPIC): valid_publish_topic,
         vol.Optional(CONF_SUBSCRIBE_TOPIC): valid_subscribe_topic,
+        vol.Optional(CONF_RETAIN, default=False): cv.boolean,
     }),
 }, extra=vol.ALLOW_EXTRA)
 
@@ -40,6 +43,7 @@ def async_setup(hass, config):
     conf = config.get(DOMAIN, {})
     pub_topic = conf.get(CONF_PUBLISH_TOPIC)
     sub_topic = conf.get(CONF_SUBSCRIBE_TOPIC)
+    retain = conf.get(CONF_RETAIN)
 
     @callback
     def _event_publisher(event):
@@ -75,7 +79,7 @@ def async_setup(hass, config):
         entity_id = event.data.get('entity_id')
         if entity_id:
             topic += '/' + entity_id
-        mqtt.async_publish(hass, topic, msg)
+        mqtt.async_publish(hass, topic, msg, None, retain)
 
     # Only listen for local events if you are going to publish them.
     if pub_topic:
