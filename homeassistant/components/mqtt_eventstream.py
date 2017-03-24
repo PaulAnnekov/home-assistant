@@ -57,9 +57,9 @@ def async_setup(hass, config):
         # to the MQTT topic, or you will end up in an infinite loop.
         if event.event_type == EVENT_CALL_SERVICE:
             if (
-                    event.data.get('domain') == mqtt.DOMAIN and
-                    event.data.get('service') == mqtt.SERVICE_PUBLISH and
-                    event.data[ATTR_SERVICE_DATA].get('topic') == pub_topic
+                                event.data.get('domain') == mqtt.DOMAIN and
+                                event.data.get('service') == mqtt.SERVICE_PUBLISH and
+                        event.data[ATTR_SERVICE_DATA].get('topic').startswith(pub_topic + '/')
             ):
                 return
 
@@ -73,9 +73,13 @@ def async_setup(hass, config):
         if event.event_type == EVENT_SERVICE_EXECUTED:
             return
 
-        event_info = {'event_type': event.event_type, 'event_data': event.data}
+        event_info = event.data
         msg = json.dumps(event_info, cls=JSONEncoder)
-        mqtt.async_publish(hass, pub_topic, msg)
+        topic = pub_topic + '/' + event.event_type
+        entity_id = event.data.get('entity_id')
+        if entity_id:
+            topic += '/' + entity_id
+        mqtt.async_publish(hass, topic, msg)
 
     # Only listen for local events if you are going to publish them.
     if pub_topic:
@@ -85,10 +89,8 @@ def async_setup(hass, config):
     @callback
     def _event_receiver(topic, payload, qos):
         """Receive events published by and fire them on this hass instance."""
-        event = json.loads(payload)
-        event_type = event.get('event_type')
-        event_data = event.get('event_data')
-
+        event_type = topic.split('/')[1]
+        event_data = json.loads(payload)
         # Special case handling for event STATE_CHANGED
         # We will try to convert state dicts back to State objects
         # Copied over from the _handle_api_post_events_event method
@@ -101,9 +103,9 @@ def async_setup(hass, config):
                     event_data[key] = state
 
         hass.bus.async_fire(
-            event_type,
-            event_data=event_data,
-            origin=EventOrigin.remote
+                event_type,
+                event_data=event_data,
+                origin=EventOrigin.remote
         )
 
     # Only subscribe if you specified a topic.
