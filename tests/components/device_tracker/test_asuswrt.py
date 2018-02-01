@@ -378,7 +378,7 @@ class TestComponentsDeviceTrackerASUSWRT(unittest.TestCase):
         telnet.login.assert_not_called()
 
     def test_get_asuswrt_data(self):
-        """Test aususwrt data fetch."""
+        """Test asuswrt data fetch."""
         scanner = get_scanner(self.hass, VALID_CONFIG_ROUTER_SSH)
         scanner._get_wl = mock.Mock()
         scanner._get_arp = mock.Mock()
@@ -447,6 +447,9 @@ class TestComponentsDeviceTrackerASUSWRT(unittest.TestCase):
         scanner = get_scanner(self.hass, VALID_CONFIG_ROUTER_SSH)
         scanner.connection = mocked_ssh
         self.assertEqual(NEIGH_DEVICES, scanner._get_neigh(ARP_DEVICES.copy()))
+        self.assertEqual(NEIGH_DEVICES, scanner._get_neigh({
+            'UN:KN:WN:DE:VI:CE': Device('UN:KN:WN:DE:VI:CE', None, None),
+        }))
         mocked_ssh.run_command.return_value = ''
         self.assertEqual({}, scanner._get_neigh(ARP_DEVICES.copy()))
 

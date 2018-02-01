@@ -77,7 +77,7 @@ class Entity(object):
     # Protect for multiple updates
     _update_staged = False
 
-    # Process updates pararell
+    # Process updates in parallel
     parallel_updates = None
 
     @property
@@ -91,7 +91,7 @@ class Entity(object):
     @property
     def unique_id(self) -> str:
         """Return an unique ID."""
-        return "{}.{}".format(self.__class__, id(self))
+        return None
 
     @property
     def name(self) -> Optional[str]:
@@ -268,7 +268,7 @@ class Entity(object):
             self.entity_id, state, attr, self.force_update)
 
     def schedule_update_ha_state(self, force_refresh=False):
-        """Schedule a update ha state change task.
+        """Schedule an update ha state change task.
 
         That avoid executor dead looks.
         """
@@ -276,7 +276,7 @@ class Entity(object):
 
     @callback
     def async_schedule_update_ha_state(self, force_refresh=False):
-        """Schedule a update ha state change task."""
+        """Schedule an update ha state change task."""
         self.hass.async_add_job(self.async_update_ha_state(force_refresh))
 
     @asyncio.coroutine
@@ -338,8 +338,22 @@ class Entity(object):
 
     def __eq__(self, other):
         """Return the comparison."""
-        return (isinstance(other, Entity) and
-                other.unique_id == self.unique_id)
+        if not isinstance(other, self.__class__):
+            return False
+
+        # Can only decide equality if both have a unique id
+        if self.unique_id is None or other.unique_id is None:
+            return False
+
+        # Ensure they belong to the same platform
+        if self.platform is not None or other.platform is not None:
+            if self.platform is None or other.platform is None:
+                return False
+
+            if self.platform.platform != other.platform.platform:
+                return False
+
+        return self.unique_id == other.unique_id
 
     def __repr__(self):
         """Return the representation."""

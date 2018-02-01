@@ -2,7 +2,7 @@
 # linters such as flake8 and pylint should be pinned, as new releases
 # make new things fail. Manually update these pins when pulling in a
 # new version
-flake8==3.3
+flake8==3.5
 pylint==1.6.5
 mypy==0.560
 pydocstyle==1.1.1
@@ -38,7 +38,7 @@ apns2==0.3.0
 caldav==0.5.0
 
 # homeassistant.components.sensor.coinmarketcap
-coinmarketcap==4.1.2
+coinmarketcap==4.2.1
 
 # homeassistant.components.device_tracker.upc_connect
 defusedxml==0.5.0
@@ -75,7 +75,7 @@ hbmqtt==0.9.1
 holidays==0.9.3
 
 # homeassistant.components.frontend
-home-assistant-frontend==20180126.0
+home-assistant-frontend==20180130.0
 
 # homeassistant.components.influxdb
 # homeassistant.components.sensor.influxdb
@@ -169,7 +169,7 @@ somecomfort==0.5.0
 
 # homeassistant.components.recorder
 # homeassistant.scripts.db_migrator
-sqlalchemy==1.2.1
+sqlalchemy==1.2.2
 
 # homeassistant.components.statsd
 statsd==3.2.1
