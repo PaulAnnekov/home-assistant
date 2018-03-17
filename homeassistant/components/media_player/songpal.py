@@ -128,7 +128,7 @@ class SongpalDevice(MediaPlayerDevice):
 
     @property
     def unique_id(self):
-        """Return an unique ID."""
+        """Return a unique ID."""
         return self._sysinfo.macAddr
 
     @property
@@ -154,7 +154,7 @@ class SongpalDevice(MediaPlayerDevice):
                 _LOGGER.warning("Got %s volume controls, using the first one",
                                 volumes)
 
-            volume = volumes.pop()
+            volume = volumes[0]
             _LOGGER.debug("Current volume: %s", volume)
 
             self._volume_max = volume.maxVolume
