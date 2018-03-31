@@ -109,6 +109,9 @@ omit =
     homeassistant/components/homematic/__init__.py
     homeassistant/components/*/homematic.py
 
+    homeassistant/components/homematicip_cloud.py
+    homeassistant/components/*/homematicip_cloud.py
+
     homeassistant/components/ihc/*
     homeassistant/components/*/ihc.py
 
@@ -156,10 +159,7 @@ omit =
 
     homeassistant/components/maxcube.py
     homeassistant/components/*/maxcube.py
-
-    homeassistant/components/mercedesme.py
-    homeassistant/components/*/mercedesme.py
-
+    
     homeassistant/components/mochad.py
     homeassistant/components/*/mochad.py
 
@@ -309,6 +309,7 @@ omit =
     homeassistant/components/alarm_control_panel/canary.py
     homeassistant/components/alarm_control_panel/concord232.py
     homeassistant/components/alarm_control_panel/ialarm.py
+    homeassistant/components/alarm_control_panel/ifttt.py
     homeassistant/components/alarm_control_panel/manual_mqtt.py
     homeassistant/components/alarm_control_panel/nx584.py
     homeassistant/components/alarm_control_panel/simplisafe.py
@@ -370,6 +371,7 @@ omit =
     homeassistant/components/device_tracker/cisco_ios.py
     homeassistant/components/device_tracker/ddwrt.py
     homeassistant/components/device_tracker/fritz.py
+    homeassistant/components/device_tracker/google_maps.py
     homeassistant/components/device_tracker/gpslogger.py
     homeassistant/components/device_tracker/hitron_coda.py
     homeassistant/components/device_tracker/huawei_router.py
@@ -398,6 +400,7 @@ omit =
     homeassistant/components/fan/mqtt.py
     homeassistant/components/fan/xiaomi_miio.py
     homeassistant/components/feedreader.py
+    homeassistant/components/folder_watcher.py
     homeassistant/components/foursquare.py
     homeassistant/components/goalfeed.py
     homeassistant/components/ifttt.py
@@ -557,7 +560,6 @@ omit =
     homeassistant/components/sensor/crimereports.py
     homeassistant/components/sensor/cups.py
     homeassistant/components/sensor/currencylayer.py
-    homeassistant/components/sensor/darksky.py
     homeassistant/components/sensor/deluge.py
     homeassistant/components/sensor/deutsche_bahn.py
     homeassistant/components/sensor/dht.py
@@ -651,6 +653,7 @@ omit =
     homeassistant/components/sensor/supervisord.py
     homeassistant/components/sensor/swiss_hydrological_data.py
     homeassistant/components/sensor/swiss_public_transport.py
+    homeassistant/components/sensor/syncthru.py
     homeassistant/components/sensor/synologydsm.py
     homeassistant/components/sensor/systemmonitor.py
     homeassistant/components/sensor/sytadin.py
@@ -660,6 +663,7 @@ omit =
     homeassistant/components/sensor/tibber.py
     homeassistant/components/sensor/time_date.py
     homeassistant/components/sensor/torque.py
+    homeassistant/components/sensor/trafikverket_weatherstation.py
     homeassistant/components/sensor/transmission.py
     homeassistant/components/sensor/travisci.py
     homeassistant/components/sensor/twitch.py

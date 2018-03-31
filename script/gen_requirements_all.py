@@ -67,6 +67,7 @@ TEST_REQUIREMENTS = (
     'prometheus_client',
     'pushbullet.py',
     'py-canary',
+    'pydeconz',
     'pydispatcher',
     'PyJWT',
     'pylitejet',
@@ -90,6 +91,7 @@ TEST_REQUIREMENTS = (
     'yahoo-finance',
     'pythonwhois',
     'wakeonlan',
+    'watchdog',
     'vultr'
 )
 

@@ -128,6 +128,7 @@ HANDLERS = Registry()
 FLOWS = [
     'config_entry_example',
     'hue',
+    'deconz',
 ]
 
 SOURCE_USER = 'user'
@@ -384,7 +385,7 @@ class FlowManager:
             handler = HANDLERS.get(domain)
 
             if handler is None:
-                raise self.hass.helpers.UnknownHandler
+                raise UnknownHandler
 
             # Make sure requirements and dependencies of component are resolved
             await async_process_deps_reqs(
