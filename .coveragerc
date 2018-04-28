@@ -94,6 +94,9 @@ omit =
     homeassistant/components/envisalink.py
     homeassistant/components/*/envisalink.py
 
+    homeassistant/components/fritzbox.py
+    homeassistant/components/*/fritzbox.py
+
     homeassistant/components/eufy.py
     homeassistant/components/*/eufy.py
 
@@ -571,6 +574,7 @@ omit =
     homeassistant/components/sensor/discogs.py
     homeassistant/components/sensor/dnsip.py
     homeassistant/components/sensor/dovado.py
+    homeassistant/components/sensor/domain_expiry.py
     homeassistant/components/sensor/dte_energy_bridge.py
     homeassistant/components/sensor/dublin_bus_transport.py
     homeassistant/components/sensor/dwd_weather_warnings.py
@@ -645,7 +649,9 @@ omit =
     homeassistant/components/sensor/sensehat.py
     homeassistant/components/sensor/serial_pm.py
     homeassistant/components/sensor/serial.py
+    homeassistant/components/sensor/sht31.py
     homeassistant/components/sensor/shodan.py
+    homeassistant/components/sensor/sigfox.py
     homeassistant/components/sensor/simulated.py
     homeassistant/components/sensor/skybeacon.py
     homeassistant/components/sensor/sma.py
