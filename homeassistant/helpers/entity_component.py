@@ -17,7 +17,7 @@ from .entity_platform import EntityPlatform
 DEFAULT_SCAN_INTERVAL = timedelta(seconds=15)
 
 
-class EntityComponent(object):
+class EntityComponent:
     """The EntityComponent manages platforms that manages entities.
 
     This class has the following responsibilities:
@@ -108,7 +108,8 @@ class EntityComponent(object):
             raise ValueError('Config entry has already been setup!')
 
         self._platforms[key] = self._async_init_entity_platform(
-            platform_type, platform
+            platform_type, platform,
+            scan_interval=getattr(platform, 'SCAN_INTERVAL', None),
         )
 
         return await self._platforms[key].async_setup_entry(config_entry)

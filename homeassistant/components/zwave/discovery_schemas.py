@@ -37,7 +37,9 @@ DISCOVERY_SCHEMAS = [
              const.DISC_OPTIONAL: True,
          }})},
     {const.DISC_COMPONENT: 'climate',
-     const.DISC_GENERIC_DEVICE_CLASS: [const.GENERIC_TYPE_THERMOSTAT],
+     const.DISC_GENERIC_DEVICE_CLASS: [
+         const.GENERIC_TYPE_THERMOSTAT,
+         const.GENERIC_TYPE_SENSOR_MULTILEVEL],
      const.DISC_VALUES: dict(DEFAULT_VALUES_SCHEMA, **{
          const.DISC_PRIMARY: {
              const.DISC_COMMAND_CLASS: [
@@ -213,6 +215,7 @@ DISCOVERY_SCHEMAS = [
          }})},
     {const.DISC_COMPONENT: 'switch',
      const.DISC_GENERIC_DEVICE_CLASS: [
+         const.GENERIC_TYPE_METER,
          const.GENERIC_TYPE_SENSOR_ALARM,
          const.GENERIC_TYPE_SENSOR_BINARY,
          const.GENERIC_TYPE_SWITCH_BINARY,

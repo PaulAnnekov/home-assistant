@@ -14,7 +14,7 @@ from homeassistant.helpers import discovery
 from homeassistant.helpers.event import track_utc_time_change
 import homeassistant.helpers.config_validation as cv
 
-REQUIREMENTS = ['bimmer_connected==0.5.0']
+REQUIREMENTS = ['bimmer_connected==0.5.1']
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -118,7 +118,7 @@ def setup_account(account_config: dict, hass, name: str) \
     return cd_account
 
 
-class BMWConnectedDriveAccount(object):
+class BMWConnectedDriveAccount:
     """Representation of a BMW vehicle."""
 
     def __init__(self, username: str, password: str, region_str: str,

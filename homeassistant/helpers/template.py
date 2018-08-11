@@ -16,7 +16,7 @@ from homeassistant.const import (
 from homeassistant.core import State, valid_entity_id
 from homeassistant.exceptions import TemplateError
 from homeassistant.helpers import location as loc_helper
-from homeassistant.loader import bind_hass, get_component
+from homeassistant.loader import bind_hass
 from homeassistant.util import convert
 from homeassistant.util import dt as dt_util
 from homeassistant.util import location as loc_util
@@ -51,7 +51,7 @@ def render_complex(value, variables=None):
     if isinstance(value, list):
         return [render_complex(item, variables)
                 for item in value]
-    elif isinstance(value, dict):
+    if isinstance(value, dict):
         return {key: render_complex(item, variables)
                 for key, item in value.items()}
     return value.async_render(variables)
@@ -82,7 +82,7 @@ def extract_entities(template, variables=None):
     return MATCH_ALL
 
 
-class Template(object):
+class Template:
     """Class to hold a template and manage caching and rendering."""
 
     def __init__(self, template, hass=None):
@@ -198,7 +198,7 @@ class Template(object):
                 self.hass == other.hass)
 
 
-class AllStates(object):
+class AllStates:
     """Class to expose all HA states as attributes."""
 
     def __init__(self, hass):
@@ -226,7 +226,7 @@ class AllStates(object):
         return STATE_UNKNOWN if state is None else state.state
 
 
-class DomainStates(object):
+class DomainStates:
     """Class to expose a specific HA domain as attributes."""
 
     def __init__(self, hass, domain):
@@ -286,7 +286,7 @@ def _wrap_state(state):
     return None if state is None else TemplateState(state)
 
 
-class TemplateMethods(object):
+class TemplateMethods:
     """Class to expose helpers to templates."""
 
     def __init__(self, hass):
@@ -318,7 +318,7 @@ class TemplateMethods(object):
             if point_state is None:
                 _LOGGER.warning("Closest:Unable to find state %s", args[0])
                 return None
-            elif not loc_helper.has_location(point_state):
+            if not loc_helper.has_location(point_state):
                 _LOGGER.warning(
                     "Closest:State does not contain valid location: %s",
                     point_state)
@@ -349,10 +349,10 @@ class TemplateMethods(object):
             else:
                 gr_entity_id = str(entities)
 
-            group = get_component('group')
+            group = self._hass.components.group
 
             states = [self._hass.states.get(entity_id) for entity_id
-                      in group.expand_entity_ids(self._hass, [gr_entity_id])]
+                      in group.expand_entity_ids([gr_entity_id])]
 
         return _wrap_state(loc_helper.closest(latitude, longitude, states))
 
@@ -420,7 +420,7 @@ class TemplateMethods(object):
         """Return state or entity_id if given."""
         if isinstance(entity_id_or_state, State):
             return entity_id_or_state
-        elif isinstance(entity_id_or_state, str):
+        if isinstance(entity_id_or_state, str):
             return self._hass.states.get(entity_id_or_state)
         return None
 

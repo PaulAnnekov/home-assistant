@@ -81,11 +81,11 @@ TRIGGER_SCHEMA = vol.Schema({
 
 ABODE_PLATFORMS = [
     'alarm_control_panel', 'binary_sensor', 'lock', 'switch', 'cover',
-    'camera', 'light'
+    'camera', 'light', 'sensor'
 ]
 
 
-class AbodeSystem(object):
+class AbodeSystem:
     """Abode System class."""
 
     def __init__(self, username, password, cache,

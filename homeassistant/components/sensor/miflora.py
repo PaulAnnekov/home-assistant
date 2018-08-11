@@ -38,7 +38,7 @@ DEFAULT_TIMEOUT = 10
 # Sensor types are defined like: Name, units
 SENSOR_TYPES = {
     'temperature': ['Temperature', '°C'],
-    'light': ['Light intensity', 'lux'],
+    'light': ['Light intensity', 'lx'],
     'moisture': ['Moisture', '%'],
     'conductivity': ['Conductivity', 'µS/cm'],
     'battery': ['Battery', '%'],
@@ -62,7 +62,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the MiFlora sensor."""
     from miflora import miflora_poller
     try:
-        import bluepy.btle  # noqa: F401 # pylint: disable=unused-variable
+        import bluepy.btle  # noqa: F401 pylint: disable=unused-variable
         from btlewrap import BluepyBackend
         backend = BluepyBackend
     except ImportError:

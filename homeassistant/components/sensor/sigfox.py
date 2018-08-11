@@ -55,7 +55,7 @@ def epoch_to_datetime(epoch_time):
     return datetime.datetime.fromtimestamp(epoch_time).isoformat()
 
 
-class SigfoxAPI(object):
+class SigfoxAPI:
     """Class for interacting with the SigFox API."""
 
     def __init__(self, api_login, api_password):
@@ -66,7 +66,7 @@ class SigfoxAPI(object):
             self._devices = self.get_devices(device_types)
 
     def check_credentials(self):
-        """"Check API credentials are valid."""
+        """Check API credentials are valid."""
         url = urljoin(API_URL, 'devicetypes')
         response = requests.get(url, auth=self._auth, timeout=10)
         if response.status_code != 200:

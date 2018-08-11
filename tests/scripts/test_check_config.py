@@ -7,7 +7,6 @@ from unittest.mock import patch
 
 import homeassistant.scripts.check_config as check_config
 from homeassistant.config import YAML_CONFIG_FILE
-from homeassistant.loader import set_component
 from tests.common import patch_yaml_files, get_test_config_dir
 
 _LOGGER = logging.getLogger(__name__)
@@ -106,7 +105,6 @@ class TestCheckConfig(unittest.TestCase):
     def test_component_platform_not_found(self, isfile_patch):
         """Test errors if component or platform not found."""
         # Make sure they don't exist
-        set_component('beer', None)
         files = {
             YAML_CONFIG_FILE: BASE_CONFIG + 'beer:',
         }
@@ -119,7 +117,6 @@ class TestCheckConfig(unittest.TestCase):
             assert res['secrets'] == {}
             assert len(res['yaml_files']) == 1
 
-        set_component('light.beer', None)
         files = {
             YAML_CONFIG_FILE: BASE_CONFIG + 'light:\n  platform: beer',
         }
@@ -163,6 +160,7 @@ class TestCheckConfig(unittest.TestCase):
                 'server_host': '0.0.0.0',
                 'server_port': 8123,
                 'trusted_networks': [],
+                'trusted_proxies': [],
                 'use_x_forwarded_for': False}
             assert res['secret_cache'] == {secrets_path: {'http_pw': 'abc123'}}
             assert res['secrets'] == {'http_pw': 'abc123'}
@@ -170,8 +168,7 @@ class TestCheckConfig(unittest.TestCase):
                 '.../configuration.yaml', '.../secrets.yaml']
 
     @patch('os.path.isfile', return_value=True)
-    def test_package_invalid(self, isfile_patch): \
-            # pylint: disable=no-self-use,invalid-name
+    def test_package_invalid(self, isfile_patch):
         """Test a valid platform setup."""
         files = {
             YAML_CONFIG_FILE: BASE_CONFIG + (
@@ -192,8 +189,7 @@ class TestCheckConfig(unittest.TestCase):
             assert res['secrets'] == {}
             assert len(res['yaml_files']) == 1
 
-    def test_bootstrap_error(self): \
-            # pylint: disable=no-self-use,invalid-name
+    def test_bootstrap_error(self):
         """Test a valid platform setup."""
         files = {
             YAML_CONFIG_FILE: BASE_CONFIG + 'automation: !include no.yaml',

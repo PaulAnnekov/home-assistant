@@ -15,7 +15,7 @@ SLOW_SETUP_MAX_WAIT = 60
 PLATFORM_NOT_READY_RETRIES = 10
 
 
-class EntityPlatform(object):
+class EntityPlatform:
     """Manage the entities for a single platform."""
 
     def __init__(self, *, hass, logger, domain, platform_name, platform,
@@ -216,6 +216,10 @@ class EntityPlatform(object):
                                    component_entities, registry)
             for entity in new_entities]
 
+        # No entities for processing
+        if not tasks:
+            return
+
         await asyncio.wait(tasks, loop=self.hass.loop)
         self.async_entities_added_callback()
 
@@ -260,9 +264,15 @@ class EntityPlatform(object):
                 suggested_object_id = '{} {}'.format(
                     self.entity_namespace, suggested_object_id)
 
+            if self.config_entry is not None:
+                config_entry_id = self.config_entry.entry_id
+            else:
+                config_entry_id = None
+
             entry = registry.async_get_or_create(
                 self.domain, self.platform_name, entity.unique_id,
-                suggested_object_id=suggested_object_id)
+                suggested_object_id=suggested_object_id,
+                config_entry_id=config_entry_id)
 
             if entry.disabled:
                 self.logger.info(
@@ -273,7 +283,7 @@ class EntityPlatform(object):
 
             entity.entity_id = entry.entity_id
             entity.registry_name = entry.name
-            entry.add_update_listener(entity)
+            entity.async_on_remove(entry.add_update_listener(entity))
 
         # We won't generate an entity ID if the platform has already set one
         # We will however make sure that platform cannot pick a registered ID
