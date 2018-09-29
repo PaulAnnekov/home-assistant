@@ -134,13 +134,6 @@ def async_reload(hass):
 
 
 @bind_hass
-def set_visibility(hass, entity_id=None, visible=True):
-    """Hide or shows a group."""
-    data = {ATTR_ENTITY_ID: entity_id, ATTR_VISIBLE: visible}
-    hass.services.call(DOMAIN, SERVICE_SET_VISIBILITY, data)
-
-
-@bind_hass
 def set_group(hass, object_id, name=None, entity_ids=None, visible=None,
               icon=None, view=None, control=None, add=None):
     """Create/Update a group."""
@@ -550,12 +543,12 @@ class Group(Entity):
         self._async_update_group_state()
 
     async def async_added_to_hass(self):
-        """Callback when added to HASS."""
+        """Handle addition to HASS."""
         if self.tracking:
             self.async_start()
 
     async def async_will_remove_from_hass(self):
-        """Callback when removed from HASS."""
+        """Handle removal from HASS."""
         if self._async_unsub_state_changed:
             self._async_unsub_state_changed()
             self._async_unsub_state_changed = None

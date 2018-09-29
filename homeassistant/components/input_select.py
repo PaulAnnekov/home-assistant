@@ -10,7 +10,6 @@ import logging
 import voluptuous as vol
 
 from homeassistant.const import ATTR_ENTITY_ID, CONF_ICON, CONF_NAME
-from homeassistant.loader import bind_hass
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_component import EntityComponent
@@ -78,40 +77,6 @@ CONFIG_SCHEMA = vol.Schema({
 }, required=True, extra=vol.ALLOW_EXTRA)
 
 
-@bind_hass
-def select_option(hass, entity_id, option):
-    """Set value of input_select."""
-    hass.services.call(DOMAIN, SERVICE_SELECT_OPTION, {
-        ATTR_ENTITY_ID: entity_id,
-        ATTR_OPTION: option,
-    })
-
-
-@bind_hass
-def select_next(hass, entity_id):
-    """Set next value of input_select."""
-    hass.services.call(DOMAIN, SERVICE_SELECT_NEXT, {
-        ATTR_ENTITY_ID: entity_id,
-    })
-
-
-@bind_hass
-def select_previous(hass, entity_id):
-    """Set previous value of input_select."""
-    hass.services.call(DOMAIN, SERVICE_SELECT_PREVIOUS, {
-        ATTR_ENTITY_ID: entity_id,
-    })
-
-
-@bind_hass
-def set_options(hass, entity_id, options):
-    """Set options of input_select."""
-    hass.services.call(DOMAIN, SERVICE_SET_OPTIONS, {
-        ATTR_ENTITY_ID: entity_id,
-        ATTR_OPTIONS: options,
-    })
-
-
 @asyncio.coroutine
 def async_setup(hass, config):
     """Set up an input select."""
@@ -129,61 +94,25 @@ def async_setup(hass, config):
     if not entities:
         return False
 
-    @asyncio.coroutine
-    def async_select_option_service(call):
-        """Handle a calls to the input select option service."""
-        target_inputs = component.async_extract_from_service(call)
+    component.async_register_entity_service(
+        SERVICE_SELECT_OPTION, SERVICE_SELECT_OPTION_SCHEMA,
+        'async_select_option'
+    )
 
-        tasks = [input_select.async_select_option(call.data[ATTR_OPTION])
-                 for input_select in target_inputs]
-        if tasks:
-            yield from asyncio.wait(tasks, loop=hass.loop)
+    component.async_register_entity_service(
+        SERVICE_SELECT_NEXT, SERVICE_SELECT_NEXT_SCHEMA,
+        lambda entity, call: entity.async_offset_index(1)
+    )
 
-    hass.services.async_register(
-        DOMAIN, SERVICE_SELECT_OPTION, async_select_option_service,
-        schema=SERVICE_SELECT_OPTION_SCHEMA)
+    component.async_register_entity_service(
+        SERVICE_SELECT_PREVIOUS, SERVICE_SELECT_PREVIOUS_SCHEMA,
+        lambda entity, call: entity.async_offset_index(-1)
+    )
 
-    @asyncio.coroutine
-    def async_select_next_service(call):
-        """Handle a calls to the input select next service."""
-        target_inputs = component.async_extract_from_service(call)
-
-        tasks = [input_select.async_offset_index(1)
-                 for input_select in target_inputs]
-        if tasks:
-            yield from asyncio.wait(tasks, loop=hass.loop)
-
-    hass.services.async_register(
-        DOMAIN, SERVICE_SELECT_NEXT, async_select_next_service,
-        schema=SERVICE_SELECT_NEXT_SCHEMA)
-
-    @asyncio.coroutine
-    def async_select_previous_service(call):
-        """Handle a calls to the input select previous service."""
-        target_inputs = component.async_extract_from_service(call)
-
-        tasks = [input_select.async_offset_index(-1)
-                 for input_select in target_inputs]
-        if tasks:
-            yield from asyncio.wait(tasks, loop=hass.loop)
-
-    hass.services.async_register(
-        DOMAIN, SERVICE_SELECT_PREVIOUS, async_select_previous_service,
-        schema=SERVICE_SELECT_PREVIOUS_SCHEMA)
-
-    @asyncio.coroutine
-    def async_set_options_service(call):
-        """Handle a calls to the set options service."""
-        target_inputs = component.async_extract_from_service(call)
-
-        tasks = [input_select.async_set_options(call.data[ATTR_OPTIONS])
-                 for input_select in target_inputs]
-        if tasks:
-            yield from asyncio.wait(tasks, loop=hass.loop)
-
-    hass.services.async_register(
-        DOMAIN, SERVICE_SET_OPTIONS, async_set_options_service,
-        schema=SERVICE_SET_OPTIONS_SCHEMA)
+    component.async_register_entity_service(
+        SERVICE_SET_OPTIONS, SERVICE_SET_OPTIONS_SCHEMA,
+        'async_set_options'
+    )
 
     yield from component.async_add_entities(entities)
     return True

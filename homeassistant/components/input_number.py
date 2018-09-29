@@ -15,7 +15,6 @@ from homeassistant.const import (
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.helpers.restore_state import async_get_last_state
-from homeassistant.loader import bind_hass
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -82,44 +81,6 @@ CONFIG_SCHEMA = vol.Schema({
 }, required=True, extra=vol.ALLOW_EXTRA)
 
 
-SERVICE_TO_METHOD = {
-    SERVICE_SET_VALUE: {
-        'method': 'async_set_value',
-        'schema': SERVICE_SET_VALUE_SCHEMA},
-    SERVICE_INCREMENT: {
-        'method': 'async_increment',
-        'schema': SERVICE_DEFAULT_SCHEMA},
-    SERVICE_DECREMENT: {
-        'method': 'async_decrement',
-        'schema': SERVICE_DEFAULT_SCHEMA},
-}
-
-
-@bind_hass
-def set_value(hass, entity_id, value):
-    """Set input_number to value."""
-    hass.services.call(DOMAIN, SERVICE_SET_VALUE, {
-        ATTR_ENTITY_ID: entity_id,
-        ATTR_VALUE: value,
-    })
-
-
-@bind_hass
-def increment(hass, entity_id):
-    """Increment value of entity."""
-    hass.services.call(DOMAIN, SERVICE_INCREMENT, {
-        ATTR_ENTITY_ID: entity_id
-    })
-
-
-@bind_hass
-def decrement(hass, entity_id):
-    """Decrement value of entity."""
-    hass.services.call(DOMAIN, SERVICE_DECREMENT, {
-        ATTR_ENTITY_ID: entity_id
-    })
-
-
 @asyncio.coroutine
 def async_setup(hass, config):
     """Set up an input slider."""
@@ -144,28 +105,20 @@ def async_setup(hass, config):
     if not entities:
         return False
 
-    @asyncio.coroutine
-    def async_handle_service(service):
-        """Handle calls to input_number services."""
-        target_inputs = component.async_extract_from_service(service)
-        method = SERVICE_TO_METHOD.get(service.service)
-        params = service.data.copy()
-        params.pop(ATTR_ENTITY_ID, None)
+    component.async_register_entity_service(
+        SERVICE_SET_VALUE, SERVICE_SET_VALUE_SCHEMA,
+        'async_set_value'
+    )
 
-        # call method
-        update_tasks = []
-        for target_input in target_inputs:
-            yield from getattr(target_input, method['method'])(**params)
-            if not target_input.should_poll:
-                continue
-            update_tasks.append(target_input.async_update_ha_state(True))
+    component.async_register_entity_service(
+        SERVICE_INCREMENT, SERVICE_DEFAULT_SCHEMA,
+        'async_increment'
+    )
 
-        if update_tasks:
-            yield from asyncio.wait(update_tasks, loop=hass.loop)
-
-    for service, data in SERVICE_TO_METHOD.items():
-        hass.services.async_register(
-            DOMAIN, service, async_handle_service, schema=data['schema'])
+    component.async_register_entity_service(
+        SERVICE_DECREMENT, SERVICE_DEFAULT_SCHEMA,
+        'async_decrement'
+    )
 
     yield from component.async_add_entities(entities)
     return True

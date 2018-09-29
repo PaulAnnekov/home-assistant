@@ -142,7 +142,6 @@ class Template:
             self.hass.loop, self.async_render_with_possible_json_value, value,
             error_value).result()
 
-    # pylint: disable=invalid-name
     def async_render_with_possible_json_value(self, value,
                                               error_value=_SENTINEL):
         """Render template with value exposed.
@@ -581,6 +580,16 @@ def regex_findall_index(value, find='', index=0, ignorecase=False):
     return re.findall(find, value, flags)[index]
 
 
+def bitwise_and(first_value, second_value):
+    """Perform a bitwise and operation."""
+    return first_value & second_value
+
+
+def bitwise_or(first_value, second_value):
+    """Perform a bitwise or operation."""
+    return first_value | second_value
+
+
 @contextfilter
 def random_every_time(context, values):
     """Choose a random value.
@@ -618,6 +627,8 @@ ENV.filters['regex_match'] = regex_match
 ENV.filters['regex_replace'] = regex_replace
 ENV.filters['regex_search'] = regex_search
 ENV.filters['regex_findall_index'] = regex_findall_index
+ENV.filters['bitwise_and'] = bitwise_and
+ENV.filters['bitwise_or'] = bitwise_or
 ENV.globals['log'] = logarithm
 ENV.globals['sin'] = sine
 ENV.globals['cos'] = cosine

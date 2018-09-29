@@ -12,7 +12,6 @@ import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
 from homeassistant.const import (
     ATTR_ENTITY_ID, ATTR_UNIT_OF_MEASUREMENT, CONF_ICON, CONF_NAME, CONF_MODE)
-from homeassistant.loader import bind_hass
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.helpers.restore_state import async_get_last_state
@@ -74,15 +73,6 @@ CONFIG_SCHEMA = vol.Schema({
 }, required=True, extra=vol.ALLOW_EXTRA)
 
 
-@bind_hass
-def set_value(hass, entity_id, value):
-    """Set input_text to value."""
-    hass.services.call(DOMAIN, SERVICE_SET_VALUE, {
-        ATTR_ENTITY_ID: entity_id,
-        ATTR_VALUE: value,
-    })
-
-
 @asyncio.coroutine
 def async_setup(hass, config):
     """Set up an input text box."""
@@ -107,19 +97,10 @@ def async_setup(hass, config):
     if not entities:
         return False
 
-    @asyncio.coroutine
-    def async_set_value_service(call):
-        """Handle a calls to the input box services."""
-        target_inputs = component.async_extract_from_service(call)
-
-        tasks = [input_text.async_set_value(call.data[ATTR_VALUE])
-                 for input_text in target_inputs]
-        if tasks:
-            yield from asyncio.wait(tasks, loop=hass.loop)
-
-    hass.services.async_register(
-        DOMAIN, SERVICE_SET_VALUE, async_set_value_service,
-        schema=SERVICE_SET_VALUE_SCHEMA)
+    component.async_register_entity_service(
+        SERVICE_SET_VALUE, SERVICE_SET_VALUE_SCHEMA,
+        'async_set_value'
+    )
 
     yield from component.async_add_entities(entities)
     return True

@@ -175,6 +175,7 @@ DISCOVERY_SCHEMAS = [
     {const.DISC_COMPONENT: 'lock',
      const.DISC_GENERIC_DEVICE_CLASS: [const.GENERIC_TYPE_ENTRY_CONTROL],
      const.DISC_SPECIFIC_DEVICE_CLASS: [
+         const.SPECIFIC_TYPE_DOOR_LOCK,
          const.SPECIFIC_TYPE_ADVANCED_DOOR_LOCK,
          const.SPECIFIC_TYPE_SECURE_KEYPAD_DOOR_LOCK,
          const.SPECIFIC_TYPE_SECURE_LOCKBOX],
@@ -210,7 +211,8 @@ DISCOVERY_SCHEMAS = [
                  const.COMMAND_CLASS_SENSOR_MULTILEVEL,
                  const.COMMAND_CLASS_METER,
                  const.COMMAND_CLASS_ALARM,
-                 const.COMMAND_CLASS_SENSOR_ALARM],
+                 const.COMMAND_CLASS_SENSOR_ALARM,
+                 const.COMMAND_CLASS_INDICATOR],
              const.DISC_GENRE: const.GENRE_USER,
          }})},
     {const.DISC_COMPONENT: 'switch',

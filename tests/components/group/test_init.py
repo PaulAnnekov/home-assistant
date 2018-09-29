@@ -12,6 +12,7 @@ from homeassistant.const import (
 import homeassistant.components.group as group
 
 from tests.common import get_test_home_assistant, assert_setup_component
+from tests.components.group import common
 
 
 class TestComponentsGroup(unittest.TestCase):
@@ -19,7 +20,7 @@ class TestComponentsGroup(unittest.TestCase):
 
     # pylint: disable=invalid-name
     def setUp(self):
-        """Setup things to be run when tests are started."""
+        """Set up things to be run when tests are started."""
         self.hass = get_test_home_assistant()
 
     # pylint: disable=invalid-name
@@ -28,7 +29,7 @@ class TestComponentsGroup(unittest.TestCase):
         self.hass.stop()
 
     def test_setup_group_with_mixed_groupable_states(self):
-        """Try to setup a group with mixed groupable states."""
+        """Try to set up a group with mixed groupable states."""
         self.hass.states.set('light.Bowl', STATE_ON)
         self.hass.states.set('device_tracker.Paulus', STATE_HOME)
         group.Group.create_group(
@@ -41,7 +42,7 @@ class TestComponentsGroup(unittest.TestCase):
                 group.ENTITY_ID_FORMAT.format('person_and_light')).state)
 
     def test_setup_group_with_a_non_existing_state(self):
-        """Try to setup a group with a non existing state."""
+        """Try to set up a group with a non existing state."""
         self.hass.states.set('light.Bowl', STATE_ON)
 
         grp = group.Group.create_group(
@@ -62,7 +63,7 @@ class TestComponentsGroup(unittest.TestCase):
         self.assertEqual(STATE_UNKNOWN, grp.state)
 
     def test_setup_empty_group(self):
-        """Try to setup an empty group."""
+        """Try to set up an empty group."""
         grp = group.Group.create_group(self.hass, 'nothing', [])
 
         self.assertEqual(STATE_UNKNOWN, grp.state)
@@ -385,13 +386,13 @@ class TestComponentsGroup(unittest.TestCase):
         group_entity_id = group.ENTITY_ID_FORMAT.format('test_group')
 
         # Hide the group
-        group.set_visibility(self.hass, group_entity_id, False)
+        common.set_visibility(self.hass, group_entity_id, False)
         self.hass.block_till_done()
         group_state = self.hass.states.get(group_entity_id)
         self.assertTrue(group_state.attributes.get(ATTR_HIDDEN))
 
         # Show it again
-        group.set_visibility(self.hass, group_entity_id, True)
+        common.set_visibility(self.hass, group_entity_id, True)
         self.hass.block_till_done()
         group_state = self.hass.states.get(group_entity_id)
         self.assertIsNone(group_state.attributes.get(ATTR_HIDDEN))
