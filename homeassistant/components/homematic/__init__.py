@@ -4,7 +4,6 @@ Support for HomeMatic devices.
 For more details about this component, please refer to the documentation at
 https://home-assistant.io/components/homematic/
 """
-import asyncio
 from datetime import timedelta
 from functools import partial
 import logging
@@ -19,7 +18,7 @@ from homeassistant.helpers import discovery
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import Entity
 
-REQUIREMENTS = ['pyhomematic==0.1.49']
+REQUIREMENTS = ['pyhomematic==0.1.50']
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -98,7 +97,9 @@ HM_IGNORE_DISCOVERY_NODE = [
 ]
 
 HM_IGNORE_DISCOVERY_NODE_EXCEPTIONS = {
-    'ACTUAL_TEMPERATURE': ['IPAreaThermostat', 'IPWeatherSensor'],
+    'ACTUAL_TEMPERATURE': [
+        'IPAreaThermostat', 'IPWeatherSensor',
+        'IPWeatherSensorPlus', 'IPWeatherSensorBasic'],
 }
 
 HM_ATTRIBUTE_SUPPORT = {
@@ -109,6 +110,7 @@ HM_ATTRIBUTE_SUPPORT = {
     'RSSI_PEER': ['rssi', {}],
     'RSSI_DEVICE': ['rssi', {}],
     'VALVE_STATE': ['valve', {}],
+    'LEVEL': ['level', {}],
     'BATTERY_STATE': ['battery', {}],
     'CONTROL_MODE': ['mode', {
         0: 'Auto',
@@ -715,10 +717,9 @@ class HMDevice(Entity):
         if self._state:
             self._state = self._state.upper()
 
-    @asyncio.coroutine
-    def async_added_to_hass(self):
+    async def async_added_to_hass(self):
         """Load data init callbacks."""
-        yield from self.hass.async_add_job(self.link_homematic)
+        await self.hass.async_add_job(self.link_homematic)
 
     @property
     def unique_id(self):
@@ -777,8 +778,7 @@ class HMDevice(Entity):
             # Link events from pyhomematic
             self._subscribe_homematic_events()
             self._available = not self._hmdevice.UNREACH
-        # pylint: disable=broad-except
-        except Exception as err:
+        except Exception as err:  # pylint: disable=broad-except
             self._connected = False
             _LOGGER.error("Exception while linking %s: %s",
                           self._address, str(err))
