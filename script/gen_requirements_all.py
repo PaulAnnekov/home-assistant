@@ -40,6 +40,7 @@ TEST_REQUIREMENTS = (
     'aioautomatic',
     'aiohttp_cors',
     'aiohue',
+    'aiounifi',
     'apns2',
     'caldav',
     'coinmarketcap',
@@ -76,6 +77,7 @@ TEST_REQUIREMENTS = (
     'pyblackbird',
     'pydeconz',
     'pydispatcher',
+    'pyhomematic',
     'pylitejet',
     'pymonoprice',
     'pynx584',
@@ -96,6 +98,7 @@ TEST_REQUIREMENTS = (
     'rflink',
     'ring_doorbell',
     'rxv',
+    'simplisafe-python',
     'sleepyq',
     'smhi-pkg',
     'somecomfort',
@@ -108,6 +111,7 @@ TEST_REQUIREMENTS = (
     'wakeonlan',
     'vultr',
     'YesssSMS',
+    'ruamel.yaml',
 )
 
 IGNORE_PACKAGES = (
