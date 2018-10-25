@@ -33,8 +33,7 @@ import homeassistant.util.color as color_util
 
 _LOGGER = logging.getLogger(__name__)
 
-DEPENDENCIES = ['lifx']
-REQUIREMENTS = ['aiolifx_effects==0.2.1']
+REQUIREMENTS = ['aiolifx==0.6.3', 'aiolifx_effects==0.2.1']
 
 SCAN_INTERVAL = timedelta(seconds=10)
 
