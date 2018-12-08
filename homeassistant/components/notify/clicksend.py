@@ -24,17 +24,7 @@ BASE_API_URL = 'https://rest.clicksend.com/v3'
 DEFAULT_SENDER = 'hass'
 TIMEOUT = 5
 
-DEFAULT_SENDER = 'hass'
-
 HEADERS = {CONTENT_TYPE: CONTENT_TYPE_JSON}
-
-
-def validate_sender(config):
-    """Set the optional sender name if sender name is not provided."""
-    if CONF_SENDER in config:
-        return config
-    config[CONF_SENDER] = DEFAULT_SENDER
-    return config
 
 
 PLATFORM_SCHEMA = vol.Schema(
@@ -60,10 +50,10 @@ class ClicksendNotificationService(BaseNotificationService):
 
     def __init__(self, config):
         """Initialize the service."""
-        self.username = config.get(CONF_USERNAME)
-        self.api_key = config.get(CONF_API_KEY)
-        self.recipients = config.get(CONF_RECIPIENT)
-        self.sender = config.get(CONF_SENDER)
+        self.username = config[CONF_USERNAME]
+        self.api_key = config[CONF_API_KEY]
+        self.recipients = config[CONF_RECIPIENT]
+        self.sender = config[CONF_SENDER]
 
     def send_message(self, message="", **kwargs):
         """Send a message to a user."""
