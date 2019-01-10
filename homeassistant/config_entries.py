@@ -136,16 +136,19 @@ HANDLERS = Registry()
 # Components that have config flows. In future we will auto-generate this list.
 FLOWS = [
     'cast',
+    'daikin',
     'deconz',
     'dialogflow',
+    'esphome',
+    'geofency',
     'hangouts',
     'homematicip_cloud',
     'hue',
     'ifttt',
     'ios',
     'lifx',
-    'mailgun',
     'luftdaten',
+    'mailgun',
     'mqtt',
     'nest',
     'openuv',
@@ -155,10 +158,12 @@ FLOWS = [
     'simplisafe',
     'smhi',
     'sonos',
+    'tellduslive',
     'tradfri',
     'twilio',
     'unifi',
     'upnp',
+    'zha',
     'zone',
     'zwave'
 ]
