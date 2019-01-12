@@ -101,13 +101,13 @@ hbmqtt==0.9.4
 hdate==0.7.5
 
 # homeassistant.components.binary_sensor.workday
-holidays==0.9.9
+holidays==0.9.8
 
 # homeassistant.components.frontend
-home-assistant-frontend==20190109.0
+home-assistant-frontend==20190109.1
 
 # homeassistant.components.homematicip_cloud
-homematicip==0.10.3
+homematicip==0.9.8
 
 # homeassistant.components.influxdb
 # homeassistant.components.sensor.influxdb
